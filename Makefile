@@ -82,9 +82,8 @@ app/build:: .build/telephony-bridge/deployer \
                             .build/var/TAG \
                             | .build/telephony-bridge
 	$(call print_target, $@)
-	docker build \
-	    --tag "$(REGISTRY)/telephony-bridge:$(TAG)"
-		-f telephony-bridge/Dockerfile \
+	cd telephony-bridge && docker build \
+	    --tag "$(REGISTRY)/telephony-bridge:$(TAG)" \
 		.
 	docker push "$(REGISTRY)/telephony-bridge:$(TAG)"
 	@touch "$@"
