@@ -1,0 +1,6 @@
+[submodule "telephony-bridge/libdfegrpc"]
+	path = telephony-bridge/libdfegrpc
+	url = https://github.com/USAN/libdfegrpc.git
+[submodule "telephony-bridge/res_speech_gdfe"]
+	path = telephony-bridge/res_speech_gdfe
+	url = https://github.com/USAN/res_speech_gdfe.git
