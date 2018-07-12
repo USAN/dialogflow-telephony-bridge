@@ -1,58 +1,23 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+---
+apiVersion: v1
+kind: Secret
 metadata:
-  name: usan-dfe-switch
+  name: $name-sip-secret
   labels:
-    app: usan-dfe-switch
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: usan-dfe-switch
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
-  template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        app: usan-dfe-switch
-    spec:
-      containers:
-      - args:
-        - /tmp/entrypoint.sh
-        command:
-        - /bin/bash
-        env:
-        - name: EXTERNAL_IP
-          value: 35.226.17.127
-        - name: SERVICE_KEY
-          valueFrom:
-            configMapKeyRef:
-              key: SERVICE_KEY
-              name: usan-dfe-switch-config
-        image: gcr.io/diallogflow-tele-bridge-test/usan-dfe-switch:beta16-withnat
-        imagePullPolicy: IfNotPresent
-        name: usan-dfe-switch
-        resources: {}
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
+    app.kubernetes.io/name: "$name"
+    app.kubernetes.io/component: sip-secret
+type: Opaque
+data:
+  password: "$sipPassword"
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  name: $name-dfe-switch-svc
   labels:
-    app: usan-dfe-switch
-  name: usan-dfe-switch-service
-  namespace: default
-  selfLink: /api/v1/namespaces/default/services/usan-dfe-switch-service
+    app.kubernetes.io/name: "$name"
+    app.kubernetes.io/component: dfe-switch
+spec:
 spec:
   externalTrafficPolicy: Cluster
   ports:
@@ -453,10 +418,64 @@ spec:
     protocol: UDP
     targetPort: 10097
   selector:
-    app: usan-dfe-switch
-  sessionAffinity: None
+    app.kubernetes.io/name: $name
+    app.kubernetes.io/component: dfe-switch
   type: LoadBalancer
-status:
-  loadBalancer:
-    ingress:
-
+  sessionAffinity: none
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: $name-dfe-switch
+  labels: &DfeDeploymentLabels
+    app.kubernetes.io/name: "$name"
+    app.kubernetes.io/component: dfe-switch
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *DfeDeploymentLabels
+  template:
+    metadata:
+      labels: *DfeDeploymentLabels
+    spec:
+      initContainers:
+      - image: $imageInit
+        name: dfe-switch-init
+        env:
+        - name: AGENT_PORT
+          value: "6080"
+        volumeMounts:
+        - name: ubbagent-config
+          mountPath: /etc/ubbagent
+      containers:
+      - image: $imageTelephonyBridge
+        name: dfe-switch
+        env:
+        - name: EXTERNAL_IP
+          value: $name-dfe-switch-svc
+        - name: SIP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: $name-sip-secret
+              key: password
+      - image: $imageUbbagent
+        name: ubbagent
+        env:
+        - name: AGENT_CONFIG_FILE
+          value: /etc/ubbagent/config.yaml
+        - name: AGENT_LOCAL_PORT
+          value: "6080"
+        - name: AGENT_STATE_DIR
+          value: /var/lib/ubbagent
+        - name: AGENT_REPORT_DIR
+          value: /var/lib/ubbagent/reports
+        volumeMounts:
+        - name: ubbagent-config
+          mountPath: /etc/ubbagent
+        - name: ubbagent-state
+          mountPath: /var/lib/ubbagent
+      volumes:
+      - name: ubbagent-config
+        emptyDir: {}
+      - name: ubbagent-state
+        emptyDir: {}
