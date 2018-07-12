@@ -421,7 +421,7 @@ spec:
     app.kubernetes.io/name: $name
     app.kubernetes.io/component: dfe-switch
   type: LoadBalancer
-  sessionAffinity: none
+  sessionAffinity: None
 ---
 apiVersion: apps/v1beta2
 kind: Deployment
@@ -458,6 +458,8 @@ spec:
             secretKeyRef:
               name: $name-sip-secret
               key: password
+        - name: AGENT_PORT
+          value: "6080"
       - image: $imageUbbagent
         name: ubbagent
         env:
