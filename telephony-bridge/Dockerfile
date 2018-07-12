@@ -168,6 +168,8 @@ COPY libdfegrpc/ /tmp/libdfegrpc/
 # copy in asterisk module code from submodule
 COPY res_speech_gdfe/ /tmp/res_speech_gdfe/
 
+COPY --from=asterisk_build /tmp/asterisk*.tar.gz /tmp
+
 COPY --from=asterisk_build /tmp/asterisk-binaries.tgz /tmp/asterisk-binaries.tgz
 RUN tar -C / -f /tmp/asterisk-binaries.tgz -x -z -v
 
