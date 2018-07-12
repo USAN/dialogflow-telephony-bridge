@@ -136,6 +136,7 @@ RUN apt-get update && \
     apt-get install -y \
         curl \
         gettext-base \
+        jq \
         libasound2-dev \
         libjansson-dev \
         libncurses5-dev \
