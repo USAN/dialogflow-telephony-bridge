@@ -40,17 +40,17 @@ APP_TEST_PARAMETERS ?= { \
 
 # Extend the target as defined in app.Makefile to
 # include real dependencies.
-app/build:: .build/telephony-bridge/deployer \
-            .build/telephony-bridge/init \
-            .build/telephony-bridge/tester \
-            .build/telephony-bridge/ubbagent \
-            .build/telephony-bridge/telephony-bridge
+app/build:: .build/dialogflow-telephony-bridge/deployer \
+            .build/dialogflow-telephony-bridge/init \
+            .build/dialogflow-telephony-bridge/tester \
+            .build/dialogflow-telephony-bridge/ubbagent \
+            .build/dialogflow-telephony-bridge/dialogflow-telephony-bridge
 
 
-.build/telephony-bridge: | .build
+.build/dialogflow-telephony-bridge: | .build
 	mkdir -p "$@"
 
-.build/telephony-bridge/deployer: apptest/deployer/* \
+.build/dialogflow-telephony-bridge/deployer: apptest/deployer/* \
                            apptest/deployer/manifest/* \
                            deployer/* \
                            manifest/* \
@@ -59,10 +59,10 @@ app/build:: .build/telephony-bridge/deployer \
                            .build/var/APP_DEPLOYER_IMAGE \
                            .build/var/REGISTRY \
                            .build/var/TAG \
-                           | .build/telephony-bridge
+                           | .build/dialogflow-telephony-bridge
 	$(call print_target, $@)
 	docker build \
-	    --build-arg REGISTRY="$(REGISTRY)/telephony-bridge" \
+	    --build-arg REGISTRY="$(REGISTRY)/dialogflow-telephony-bridge" \
 	    --build-arg TAG="$(TAG)" \
 	    --tag "$(APP_DEPLOYER_IMAGE)" \
 	    -f deployer/Dockerfile \
@@ -71,40 +71,40 @@ app/build:: .build/telephony-bridge/deployer \
 	@touch "$@"
 
 
-.build/telephony-bridge/tester:
+.build/dialogflow-telephony-bridge/tester:
 	$(call print_target, $@)
 	docker pull cosmintitei/bash-curl
 	docker tag cosmintitei/bash-curl "$(TESTER_IMAGE)"
 	docker push "$(TESTER_IMAGE)"
 	@touch "$@"
 
-.build/telephony-bridge/telephony-bridge: .build/var/REGISTRY \
+.build/dialogflow-telephony-bridge/dialogflow-telephony-bridge: .build/var/REGISTRY \
                             .build/var/TAG \
-                            | .build/telephony-bridge
+                            | .build/dialogflow-telephony-bridge
 	$(call print_target, $@)
 	cd telephony-bridge && docker build \
-	    --tag "$(REGISTRY)/telephony-bridge:$(TAG)" \
+	    --tag "$(REGISTRY)/dialogflow-telephony-bridge:$(TAG)" \
 		.
-	docker push "$(REGISTRY)/telephony-bridge:$(TAG)"
+	docker push "$(REGISTRY)/dialogflow-telephony-bridge:$(TAG)"
 	@touch "$@"
 
 # Build secondary app image.
-.build/telephony-bridge/init: init/* \
+.build/dialogflow-telephony-bridge/init: init/* \
                        .build/var/REGISTRY \
                        .build/var/TAG \
-                       | .build/telephony-bridge
+                       | .build/dialogflow-telephony-bridge
 	$(call print_target, $@)
 	cd init \
-	&& docker build --tag "$(REGISTRY)/telephony-bridge/init:$(TAG)" .
-	docker push "$(REGISTRY)/telephony-bridge/init:$(TAG)"
+	&& docker build --tag "$(REGISTRY)/dialogflow-telephony-bridge/init:$(TAG)" .
+	docker push "$(REGISTRY)/dialogflow-telephony-bridge/init:$(TAG)"
 	@touch "$@"
 
 # Relocate ubbagent image to $REGISTRY.
-.build/telephony-bridge/ubbagent: .build/ubbagent/ubbagent \
+.build/dialogflow-telephony-bridge/ubbagent: .build/ubbagent/ubbagent \
                            .build/var/REGISTRY \
                            .build/var/TAG \
-                           | .build/telephony-bridge
+                           | .build/dialogflow-telephony-bridge
 	$(call print_target, $@)
-	docker tag "gcr.io/cloud-marketplace-tools/ubbagent" "$(REGISTRY)/telephony-bridge/ubbagent:$(TAG)"
-	docker push "$(REGISTRY)/telephony-bridge/ubbagent:$(TAG)"
+	docker tag "gcr.io/cloud-marketplace-tools/ubbagent" "$(REGISTRY)/dialogflow-telephony-bridge/ubbagent:$(TAG)"
+	docker push "$(REGISTRY)/dialogflow-telephony-bridge/ubbagent:$(TAG)"
 	@touch "$@"
