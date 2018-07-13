@@ -1,7 +1,7 @@
 # Overview
 
-The USAN DialogFlow Telephony Bridge allows you to connect your VOIP PBX to the 
-Dialogflow API.
+The USAN Dialogflow Enterprise Telephony Gateway provides media server functionality as well as enterprise telephony (SIP) connectivity between Google Dialogflow Enterprise 
+and the companies' enterprise telephony components (PBX or SBC). 
 
 # Installation
 
@@ -14,7 +14,7 @@ on-screen instructions:
 
 ## Command line instructions
 
-Follow these instructions to install the USAN Dialogflow Telephony Bridge from the command line.
+Follow these instructions to install the USAN Dialogflow Enterprise Telephony Gateway from the command line.
 
 ### Prerequisites
 
@@ -30,10 +30,10 @@ Follow these instructions to install the USAN Dialogflow Telephony Bridge from t
 
 Set environment variables (modify if necessary):
 ```
-export APP_INSTANCE_NAME=dialogflow-telephony-bridge-1
+export APP_INSTANCE_NAME=dialogflow-entperise-telephony-gateway-1
 export NAMESPACE=default
-export IMAGE_WORDPRESS=launcher.gcr.io/google/dialogflow-telephony-bridge:1
-export IMAGE_INIT=launcher.gcr.io/google/dialogflow-telephony-bridge/init:1 ???
+export IMAGE_GATEWAY=launcher.gcr.io/usan-public-209020/dialogflow-entperise-telephony-gateway:1
+export IMAGE_INIT=launcher.gcr.io/usan-public-209020/dialogflow-entperise-telephony-gateway/init:1
 export IMAGE_UBBAGENT=launcher.gcr.io/google/ubbagent
 ```
 
@@ -51,8 +51,9 @@ kubectl apply -f expanded.yaml
 
 # Backups
 
-*TODO: instructions for backups*
+The Gateway appliance does not store any long-term data. Backups are not necessary.
 
 # Upgrades
 
-*TODO: instructions for upgrades*
+There is no upgrade path. It is recommended you stand up a new appliance and transition your
+traffic to that new appliance.
