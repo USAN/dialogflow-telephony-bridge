@@ -80,6 +80,8 @@ app/build:: .build/dialogflow-telephony-bridge/deployer \
 
 .build/dialogflow-telephony-bridge/dialogflow-telephony-bridge: .build/var/REGISTRY \
                             .build/var/TAG \
+							telephony-bridge/* \
+							telephony-bridge/etc_asterisk/* \
                             | .build/dialogflow-telephony-bridge
 	$(call print_target, $@)
 	cd telephony-bridge && docker build \
