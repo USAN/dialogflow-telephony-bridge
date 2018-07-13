@@ -1,0 +1,509 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: $name-sip-secret
+  labels:
+    app.kubernetes.io/name: "$name"
+    app.kubernetes.io/component: sip-secret
+type: Opaque
+data:
+  password: "$sipPassword"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: $name-service-view-role
+  namespace: $namespace
+rules:
+  - apiGroups: [""]
+    resources: ["services", "endpoints"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: $name-dfe-switch-rolebinding
+  namespace: $namespace
+roleRef:
+  kind: Role
+  name: $name-service-view-role
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $name-dfe-switch-svc
+  labels:
+    app.kubernetes.io/name: "$name"
+    app.kubernetes.io/component: dfe-switch
+spec:
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: 50600-to-50600-udp
+    port: 50600
+    protocol: UDP
+    targetPort: 5060
+  - name: 10000-to-10000-udp
+    port: 10000
+    protocol: UDP
+    targetPort: 10000
+  - name: 10001-to-10001-udp
+    port: 10001
+    protocol: UDP
+    targetPort: 10001
+  - name: 10002-to-10002-udp
+    port: 10002
+    protocol: UDP
+    targetPort: 10002
+  - name: 10003-to-10003-udp
+    port: 10003
+    protocol: UDP
+    targetPort: 10003
+  - name: 10004-to-10004-udp
+    port: 10004
+    protocol: UDP
+    targetPort: 10004
+  - name: 10005-to-10005-udp
+    port: 10005
+    protocol: UDP
+    targetPort: 10005
+  - name: 10006-to-10006
+    port: 10006
+    protocol: UDP
+    targetPort: 10006
+  - name: 10007-to-10007
+    port: 10007
+    protocol: UDP
+    targetPort: 10007
+  - name: 10008-to-10008
+    port: 10008
+    protocol: UDP
+    targetPort: 10008
+  - name: 10009-to-10009
+    port: 10009
+    protocol: UDP
+    targetPort: 10009
+  - name: 10010-to-10010
+    port: 10010
+    protocol: UDP
+    targetPort: 10010
+  - name: 10011-to-10011
+    port: 10011
+    protocol: UDP
+    targetPort: 10011
+  - name: 10012-to-10012
+    port: 10012
+    protocol: UDP
+    targetPort: 10012
+  - name: 10013-to-10013
+    port: 10013
+    protocol: UDP
+    targetPort: 10013
+  - name: 10014-to-10014
+    port: 10014
+    protocol: UDP
+    targetPort: 10014
+  - name: 10015-to-10015
+    port: 10015
+    protocol: UDP
+    targetPort: 10015
+  - name: 10016-to-10016
+    port: 10016
+    protocol: UDP
+    targetPort: 10016
+  - name: 10017-to-10017
+    port: 10017
+    protocol: UDP
+    targetPort: 10017
+  - name: 10018-to-10018
+    port: 10018
+    protocol: UDP
+    targetPort: 10018
+  - name: 10019-to-10019
+    port: 10019
+    protocol: UDP
+    targetPort: 10019
+  - name: 10020-to-10020
+    port: 10020
+    protocol: UDP
+    targetPort: 10020
+  - name: 10021-to-10021
+    port: 10021
+    protocol: UDP
+    targetPort: 10021
+  - name: 10022-to-10022
+    port: 10022
+    protocol: UDP
+    targetPort: 10022
+  - name: 10023-to-10023
+    port: 10023
+    protocol: UDP
+    targetPort: 10023
+  - name: 10024-to-10024
+    port: 10024
+    protocol: UDP
+    targetPort: 10024
+  - name: 10025-to-10025
+    port: 10025
+    protocol: UDP
+    targetPort: 10025
+  - name: 10026-to-10026
+    port: 10026
+    protocol: UDP
+    targetPort: 10026
+  - name: 10027-to-10027
+    port: 10027
+    protocol: UDP
+    targetPort: 10027
+  - name: 10028-to-10028
+    port: 10028
+    protocol: UDP
+    targetPort: 10028
+  - name: 10029-to-10029
+    port: 10029
+    protocol: UDP
+    targetPort: 10029
+  - name: 10030-to-10030
+    port: 10030
+    protocol: UDP
+    targetPort: 10030
+  - name: 10031-to-10031
+    port: 10031
+    protocol: UDP
+    targetPort: 10031
+  - name: 10032-to-10032
+    port: 10032
+    protocol: UDP
+    targetPort: 10032
+  - name: 10033-to-10033
+    port: 10033
+    protocol: UDP
+    targetPort: 10033
+  - name: 10034-to-10034
+    port: 10034
+    protocol: UDP
+    targetPort: 10034
+  - name: 10035-to-10035
+    port: 10035
+    protocol: UDP
+    targetPort: 10035
+  - name: 10036-to-10036
+    port: 10036
+    protocol: UDP
+    targetPort: 10036
+  - name: 10037-to-10037
+    port: 10037
+    protocol: UDP
+    targetPort: 10037
+  - name: 10038-to-10038
+    port: 10038
+    protocol: UDP
+    targetPort: 10038
+  - name: 10039-to-10039
+    port: 10039
+    protocol: UDP
+    targetPort: 10039
+  - name: 10040-to-10040
+    port: 10040
+    protocol: UDP
+    targetPort: 10040
+  - name: 10041-to-10041
+    port: 10041
+    protocol: UDP
+    targetPort: 10041
+  - name: 10042-to-10042
+    port: 10042
+    protocol: UDP
+    targetPort: 10042
+  - name: 10043-to-10043
+    port: 10043
+    protocol: UDP
+    targetPort: 10043
+  - name: 10044-to-10044
+    port: 10044
+    protocol: UDP
+    targetPort: 10044
+  - name: 10045-to-10045
+    port: 10045
+    protocol: UDP
+    targetPort: 10045
+  - name: 10046-to-10046
+    port: 10046
+    protocol: UDP
+    targetPort: 10046
+  - name: 10047-to-10047
+    port: 10047
+    protocol: UDP
+    targetPort: 10047
+  - name: 10048-to-10048
+    port: 10048
+    protocol: UDP
+    targetPort: 10048
+  - name: 10049-to-10049
+    port: 10049
+    protocol: UDP
+    targetPort: 10049
+  - name: 10050-to-10050
+    port: 10050
+    protocol: UDP
+    targetPort: 10050
+  - name: 10051-to-10051
+    port: 10051
+    protocol: UDP
+    targetPort: 10051
+  - name: 10052-to-10052
+    port: 10052
+    protocol: UDP
+    targetPort: 10052
+  - name: 10053-to-10053
+    port: 10053
+    protocol: UDP
+    targetPort: 10053
+  - name: 10054-to-10054
+    port: 10054
+    protocol: UDP
+    targetPort: 10054
+  - name: 10055-to-10055
+    port: 10055
+    protocol: UDP
+    targetPort: 10055
+  - name: 10056-to-10056
+    port: 10056
+    protocol: UDP
+    targetPort: 10056
+  - name: 10057-to-10057
+    port: 10057
+    protocol: UDP
+    targetPort: 10057
+  - name: 10058-to-10058
+    port: 10058
+    protocol: UDP
+    targetPort: 10058
+  - name: 10059-to-10059
+    port: 10059
+    protocol: UDP
+    targetPort: 10059
+  - name: 10060-to-10060
+    port: 10060
+    protocol: UDP
+    targetPort: 10060
+  - name: 10061-to-10061
+    port: 10061
+    protocol: UDP
+    targetPort: 10061
+  - name: 10062-to-10062
+    port: 10062
+    protocol: UDP
+    targetPort: 10062
+  - name: 10063-to-10063
+    port: 10063
+    protocol: UDP
+    targetPort: 10063
+  - name: 10064-to-10064
+    port: 10064
+    protocol: UDP
+    targetPort: 10064
+  - name: 10065-to-10065
+    port: 10065
+    protocol: UDP
+    targetPort: 10065
+  - name: 10066-to-10066
+    port: 10066
+    protocol: UDP
+    targetPort: 10066
+  - name: 10067-to-10067
+    port: 10067
+    protocol: UDP
+    targetPort: 10067
+  - name: 10068-to-10068
+    port: 10068
+    protocol: UDP
+    targetPort: 10068
+  - name: 10069-to-10069
+    port: 10069
+    protocol: UDP
+    targetPort: 10069
+  - name: 10070-to-10070
+    port: 10070
+    protocol: UDP
+    targetPort: 10070
+  - name: 10071-to-10071
+    port: 10071
+    protocol: UDP
+    targetPort: 10071
+  - name: 10072-to-10072
+    port: 10072
+    protocol: UDP
+    targetPort: 10072
+  - name: 10073-to-10073
+    port: 10073
+    protocol: UDP
+    targetPort: 10073
+  - name: 10074-to-10074
+    port: 10074
+    protocol: UDP
+    targetPort: 10074
+  - name: 10075-to-10075
+    port: 10075
+    protocol: UDP
+    targetPort: 10075
+  - name: 10076-to-10076
+    port: 10076
+    protocol: UDP
+    targetPort: 10076
+  - name: 10077-to-10077
+    port: 10077
+    protocol: UDP
+    targetPort: 10077
+  - name: 10078-to-10078
+    port: 10078
+    protocol: UDP
+    targetPort: 10078
+  - name: 10079-to-10079
+    port: 10079
+    protocol: UDP
+    targetPort: 10079
+  - name: 10080-to-10080
+    port: 10080
+    protocol: UDP
+    targetPort: 10080
+  - name: 10081-to-10081
+    port: 10081
+    protocol: UDP
+    targetPort: 10081
+  - name: 10082-to-10082
+    port: 10082
+    protocol: UDP
+    targetPort: 10082
+  - name: 10083-to-10083
+    port: 10083
+    protocol: UDP
+    targetPort: 10083
+  - name: 10084-to-10084
+    port: 10084
+    protocol: UDP
+    targetPort: 10084
+  - name: 10085-to-10085
+    port: 10085
+    protocol: UDP
+    targetPort: 10085
+  - name: 10086-to-10086
+    port: 10086
+    protocol: UDP
+    targetPort: 10086
+  - name: 10087-to-10087
+    port: 10087
+    protocol: UDP
+    targetPort: 10087
+  - name: 10088-to-10088
+    port: 10088
+    protocol: UDP
+    targetPort: 10088
+  - name: 10089-to-10089
+    port: 10089
+    protocol: UDP
+    targetPort: 10089
+  - name: 10090-to-10090
+    port: 10090
+    protocol: UDP
+    targetPort: 10090
+  - name: 10091-to-10091
+    port: 10091
+    protocol: UDP
+    targetPort: 10091
+  - name: 10092-to-10092
+    port: 10092
+    protocol: UDP
+    targetPort: 10092
+  - name: 10093-to-10093
+    port: 10093
+    protocol: UDP
+    targetPort: 10093
+  - name: 10094-to-10094
+    port: 10094
+    protocol: UDP
+    targetPort: 10094
+  - name: 10095-to-10095
+    port: 10095
+    protocol: UDP
+    targetPort: 10095
+  - name: 10096-to-10096
+    port: 10096
+    protocol: UDP
+    targetPort: 10096
+  - name: 10097-to-10097
+    port: 10097
+    protocol: UDP
+    targetPort: 10097
+  selector:
+    app.kubernetes.io/name: $name
+    app.kubernetes.io/component: dfe-switch
+  type: LoadBalancer
+  sessionAffinity: None
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: $name-dfe-switch
+  labels: &DfeDeploymentLabels
+    app.kubernetes.io/name: "$name"
+    app.kubernetes.io/component: dfe-switch
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *DfeDeploymentLabels
+  template:
+    metadata:
+      labels: *DfeDeploymentLabels
+    spec:
+      initContainers:
+      - image: $imageInit
+        name: dfe-switch-init
+        env:
+        - name: AGENT_PORT
+          value: "6080"
+        volumeMounts:
+        - name: ubbagent-config
+          mountPath: /etc/ubbagent
+      containers:
+      - image: $imageTelephonyBridge
+        name: dfe-switch
+        # temp add so i can access the console
+        tty: true
+        stdin: true
+        env:
+        - name: EXTERNAL_IP
+          value: $name-dfe-switch-svc
+        - name: SIP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: $name-sip-secret
+              key: password
+        - name: AGENT_PORT
+          value: "6080"
+      - image: $imageUbbagent
+        name: ubbagent
+        env:
+        - name: AGENT_CONFIG_FILE
+          value: /etc/ubbagent/config.yaml
+        - name: AGENT_LOCAL_PORT
+          value: "6080"
+        - name: AGENT_STATE_DIR
+          value: /var/lib/ubbagent
+        - name: AGENT_REPORT_DIR
+          value: /var/lib/ubbagent/reports
+        volumeMounts:
+        - name: ubbagent-config
+          mountPath: /etc/ubbagent
+        - name: ubbagent-state
+          mountPath: /var/lib/ubbagent
+      volumes:
+      - name: ubbagent-config
+        emptyDir: {}
+      - name: ubbagent-state
+        emptyDir: {}

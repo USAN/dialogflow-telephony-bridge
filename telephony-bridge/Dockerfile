@@ -34,6 +34,7 @@ RUN tar -f /tmp/grpc_build.tgz -z -v -c \
     /usr/include/google/protobuf/* \
     /usr/include/grpc* \
     /usr/bin/protoc \
+    /usr/share/grpc \
     /usr/bin/grpc_cpp_plugin
 
 FROM ubuntu:14.04 as asterisk_build
@@ -136,6 +137,7 @@ RUN apt-get update && \
     apt-get install -y \
         curl \
         gettext-base \
+        jq \
         libasound2-dev \
         libjansson-dev \
         libncurses5-dev \
