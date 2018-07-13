@@ -31,14 +31,22 @@ if [ "${EXTERNAL_IP}" = "" ] ; then
         exit 1
 fi
 
+NAMESPACE=${NAMESPACE:-default}
 LOAD_BALANCER_NAME="${EXTERNAL_IP}"
-EXTERNAL_IP=$(curl curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes/api/v1/namespaces/default/services/dialogflow-telephony-bridge-1-dfe-switch-svc 2>/dev/null | jq -r '.status.loadBalancer.ingress[0].ip')
+
+SVC_DATA=$(curl curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes/api/v1/namespaces/$NAMESPACE/services/$LOAD_BALANCER_NAME 2>/dev/null)
+printf "svc data - %s\n" "$SVC_DATA"
+EXTERNAL_IP=$(jq '.status.loadBalancer.ingress[0].ip' <<< ${SVC_DATA})
+printf "ext ip - %s\n" "$EXTERNAL_IP"
 while [ -z "${EXTERNAL_IP}" -o "${EXTERNAL_IP}" = "null" ] ; do
     printf "INFO: Waiting for external IP to be allocated to load balancer ${LOAD_BALANCER_NAME}\n"
     sleep 5
-    EXTERNAL_IP=$(curl curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes/api/v1/namespaces/default/services/dialogflow-telephony-bridge-1-dfe-switch-svc 2>/dev/null | jq -r '.status.loadBalancer.ingress[0].ip')
+    SVC_DATA=$(curl curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes/api/v1/namespaces/$NAMESPACE/services/$LOAD_BALANCER_NAME 2>/dev/null)
+    printf "svc data - %s\n" "$SVC_DATA"
+    EXTERNAL_IP=$(jq '.status.loadBalancer.ingress[0].ip' <<< ${SVC_DATA})
+    printf "ext ip - %s\n" "$EXTERNAL_IP"
 done
-
+EXTERNAL_IP="${EXTERNAL_IP//\"}"
 printf "External IP = ${EXTERNAL_IP}\n"
 
 mkdir -p /etc/asterisk
