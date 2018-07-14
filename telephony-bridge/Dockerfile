@@ -172,9 +172,9 @@ COPY --from=asterisk_build /tmp/asterisk*.tar.gz /tmp
 COPY --from=asterisk_build /tmp/asterisk-binaries.tgz /tmp/asterisk-binaries.tgz
 RUN for f in /tmp/asterisk-*tgz ; do \
     if [ "$f" = "/tmp/asterisk-binaries.tgz" ] ; then \
-        tar -C / -f "${f}" -x -z -v \
+        tar -C / -f "${f}" -x -z -v; \
     else \
-        tar -C /tmp -f "${f}" -x -z -v \
+        tar -C /tmp -f "${f}" -x -z -v; \
     fi; done
 
 # copy container startup script & config
