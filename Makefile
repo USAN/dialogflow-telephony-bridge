@@ -71,10 +71,16 @@ app/build:: .build/dialogflow-telephony-bridge/deployer \
 	@touch "$@"
 
 
-.build/dialogflow-telephony-bridge/tester:
+.build/dialogflow-telephony-bridge/tester: .build/var/REGISTRY \
+                            .build/var/TAG \
+							apptest/* \
+							apptest/dialogflow-telephony-bridge-testsuite/* \
+							apptest/dialogflow-telephony-bridge-testsuite/sip/* \
+							| .build/dialogflow-telephony-bridge
 	$(call print_target, $@)
-	docker pull cosmintitei/bash-curl
-	docker tag cosmintitei/bash-curl "$(TESTER_IMAGE)"
+	cd apptest && docker build \
+		--tag "$(TESTER_IMAGE)" \
+		.
 	docker push "$(TESTER_IMAGE)"
 	@touch "$@"
 

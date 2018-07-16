@@ -10,16 +10,10 @@ spec:
   containers:
   - name: tester
     image: "${imageTester}"
-    volumeMounts:
-    - name: config-volume
-      mountPath: /tester
-    command: ["bash"]
-    args: ["/tester/run.sh"]
+    env:
+      - name: HOST
+        value: "${name}-dfe-switch-internal-svc"
   restartPolicy: Never
-  volumes:
-  - name: config-volume
-    configMap:
-      name: "${name}-test"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -29,7 +23,3 @@ metadata:
     app.kubernetes.io/name: "${name}"
   annotations:
     marketplace.cloud.google.com/verification: test
-data:
-  run.sh: |-
-    set -x
-      echo SUCCESS
