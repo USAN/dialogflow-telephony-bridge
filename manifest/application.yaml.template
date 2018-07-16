@@ -39,4 +39,35 @@ spec:
   - group: v1
     kind: Service
   notes: |-
-    Put installation notes here.
+    # Expose Gateway SIP port
+
+    By default, the gateway sets up a service for the RTP traffic on ports 10000-10100
+    but does not expose the SIP port. It is **highly recommended** that you add source filtering
+    or other traffic filter on this external address prior to exposing the SIP port.
+
+    To add a source filter, put your address (in CIDR format) into the gateway service as a source range:
+
+    ```
+    kubectl patch svc "$name-dfe-switch-svc" --namespace "$namespace" -p '{"spec":{"loadBalancerSourceRanges":["1.2.3.4/32"]}}'
+    ```
+
+    Then, run the following command to expose the SIP port on your gateway:
+
+    ```
+    kubectl patch svc "$name-dfe-switch-svc" --namespace "$namespace" -p '{"spec":{"ports":[{"port":5060,"targetPort":5060,"protocol":"UDP","name":"sip-port"}]}}'
+    ```
+
+    # Access Gateway
+
+    Retrieve the external IP of the Gateway service by running:
+
+    ```
+    kubectl get --namespace ${namespace} \
+      svc ${name}-dfe-switch-svc \
+      -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+    ```
+
+    Note that it might take some time for the external IP to be provisioned.
+
+    Place a SIP call to `${PROJECT_ID}@${SERVICE_IP}:5060` to access Dialogflow through the Gateway.
+    
