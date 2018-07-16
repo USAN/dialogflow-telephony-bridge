@@ -16,6 +16,24 @@ spec:
   restartPolicy: Never
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  name: $name-dfe-switch-internal-svc
+  labels:
+    app.kubernetes.io/name: "$name"
+    app.kubernetes.io/component: dfe-switch
+spec:
+  ports:
+  - name: sip
+    port: 5060
+    protocol: UDP
+    targetPort: 5060
+  selector:
+    app.kubernetes.io/name: "${name}"
+    app.kubernetes.io/component: dfe-switch
+  type: ClusterIP
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: "${name}-test"
