@@ -11,6 +11,19 @@ metadata:
   labels:
     app.kubernetes.io/name: "$name"
 spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "$name"
+  componentKinds:
+  - group: apps/v1beta2
+    kind: Deployment
+  - group: batch/v1
+    kind: Job
+  - group: v1
+    kind: Secret
+  - group: v1
+    kind: Service
+descriptor:
   type: Dialogflow Enterprise Telephony Gateway
   version: '1.0'
   description: |-
@@ -26,18 +39,6 @@ spec:
   links:
   - description: Getting Started
     url: https://www.usan.com/google/dfetg
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: "$name"
-  componentKinds:
-  - group: apps/v1beta2
-    kind: Deployment
-  - group: batch/v1
-    kind: Job
-  - group: v1
-    kind: Secret
-  - group: v1
-    kind: Service
   notes: |-
     # Expose Gateway SIP port
 
@@ -48,13 +49,18 @@ spec:
     To add a source filter, put your address (in CIDR format) into the gateway service as a source range:
 
     ```
-    kubectl patch svc "$name-dfe-switch-svc" --namespace "$namespace" -p '{"spec":{"loadBalancerSourceRanges":["1.2.3.4/32"]}}'
+    kubectl patch svc "$name-dfe-switch-svc" \
+      --namespace "$namespace" \
+      -p '{"spec":{"loadBalancerSourceRanges":["1.2.3.4/32"]}}'
     ```
 
     Then, run the following command to expose the SIP port on your gateway:
 
     ```
-    kubectl patch svc "$name-dfe-switch-svc" --namespace "$namespace" -p '{"spec":{"ports":[{"port":5060,"targetPort":5060,"protocol":"UDP","name":"sip-port"}]}}'
+    kubectl patch svc "$name-dfe-switch-svc" \
+      --namespace "$namespace" \
+      -p '{"spec":{"ports":[{"port":5060,"targetPort":5060, \
+        "protocol":"UDP","name":"sip-port"}]}}'
     ```
 
     # Access Gateway
