@@ -34,20 +34,28 @@ fi
 NAMESPACE=${NAMESPACE:-default}
 LOAD_BALANCER_NAME="${EXTERNAL_IP}"
 
-SVC_DATA=$(curl curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes/api/v1/namespaces/$NAMESPACE/services/$LOAD_BALANCER_NAME 2>/dev/null)
+SVC_DATA=$(curl -s --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes/api/v1/namespaces/$NAMESPACE/services/$LOAD_BALANCER_NAME 2>/dev/null)
 printf "svc data - %s\n" "$SVC_DATA"
 EXTERNAL_IP=$(jq '.status.loadBalancer.ingress[0].ip' <<< ${SVC_DATA})
 printf "ext ip - %s\n" "$EXTERNAL_IP"
 while [ -z "${EXTERNAL_IP}" -o "${EXTERNAL_IP}" = "null" ] ; do
     printf "INFO: Waiting for external IP to be allocated to load balancer ${LOAD_BALANCER_NAME}\n"
     sleep 5
-    SVC_DATA=$(curl curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes/api/v1/namespaces/$NAMESPACE/services/$LOAD_BALANCER_NAME 2>/dev/null)
+    SVC_DATA=$(curl -s --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes/api/v1/namespaces/$NAMESPACE/services/$LOAD_BALANCER_NAME 2>/dev/null)
     printf "svc data - %s\n" "$SVC_DATA"
     EXTERNAL_IP=$(jq '.status.loadBalancer.ingress[0].ip' <<< ${SVC_DATA})
     printf "ext ip - %s\n" "$EXTERNAL_IP"
 done
 EXTERNAL_IP="${EXTERNAL_IP//\"}"
 printf "External IP = ${EXTERNAL_IP}\n"
+
+export PROJECT_ID=$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/project/project-id)
+if [ -x "${PROJECT_ID}" ]; then
+    printf "ERROR: Unable to discover project ID from Google metadata endpoint.\n"
+    printf "ERROR: Shutting down appliance.\n"
+    sleep 5
+    exit 10
+fi
 
 mkdir -p /etc/asterisk
 
