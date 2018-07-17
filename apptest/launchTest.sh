@@ -1,9 +1,8 @@
 #! /bin/bash
 
-PROJECT_ID=$(curl -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/project/project-id)
 IP=$(getent hosts ${HOST} | head -n 1 | awk '{ print $1 }')
 
-node index.js --svc "${PROJECT_ID}" --host "${IP}"
+node index.js --svc "1234567890" --host "${IP}"
 
 RESULT=$?
 
