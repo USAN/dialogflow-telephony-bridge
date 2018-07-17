@@ -133,6 +133,8 @@ RUN tar -f /tmp/asterisk-binaries.tgz -z -v -c \
 
 FROM ubuntu:14.04
 
+ARG ASTERISK_VERSION=asterisk-13.21.1
+
 RUN apt-get update && \
     apt-get install -y \
         curl \
@@ -168,14 +170,10 @@ COPY libdfegrpc/ /tmp/libdfegrpc/
 # copy in asterisk module code from submodule
 COPY res_speech_gdfe/ /tmp/res_speech_gdfe/
 
-COPY --from=asterisk_build /tmp/asterisk*.tar.gz /tmp
+COPY --from=asterisk_build /tmp/${ASTERISK_VERSION}.tar.gz /tmp
 COPY --from=asterisk_build /tmp/asterisk-binaries.tgz /tmp/asterisk-binaries.tgz
-RUN for f in /tmp/asterisk-*tgz ; do \
-    if [ "$f" = "/tmp/asterisk-binaries.tgz" ] ; then \
-        tar -C / -f "${f}" -x -z -v; \
-    else \
-        tar -C /tmp -f "${f}" -x -z -v; \
-    fi; done
+RUN tar -C / -f /tmp/asterisk-binaries.tgz -x -v -z && \
+    tar -C /tmp -f /tmp/${ASTERISK_VERSION}.tar.gz -x -v -z
 
 # copy container startup script & config
 WORKDIR /tmp
