@@ -13,9 +13,6 @@ include marketplace-tools/gcloud.Makefile
 # deployer images locally.
 include marketplace-tools/marketplace.Makefile
 
-# ubbagent.Makefile provides ".build/ubbagent/ubbagent"
-# target to build the ubbagent image locally.
-include marketplace-tools/ubbagent.Makefile
 include marketplace-tools/var.Makefile
 
 # app.Makefile provides the main targets for installing the
@@ -29,9 +26,6 @@ APP_PARAMETERS ?= { \
   "name": "$(NAME)", \
   "namespace": "$(NAMESPACE)", \
   "imageTelephonyBridge": "$(REGISTRY)/dialogflow-telephony-bridge:$(TAG)", \
-  "imageInit": "$(REGISTRY)/dialogflow-telephony-bridge/init:$(TAG)", \
-  "imageUbbagent": "$(REGISTRY)/dialogflow-telephony-bridge/ubbagent:$(TAG)", \
-  "reportingSecret": "$(NAME)-reporting-secret" \
 }
 TESTER_IMAGE ?= $(REGISTRY)/dialogflow-telephony-bridge/tester:$(TAG)
 APP_TEST_PARAMETERS ?= { \
@@ -41,9 +35,7 @@ APP_TEST_PARAMETERS ?= { \
 # Extend the target as defined in app.Makefile to
 # include real dependencies.
 app/build:: .build/dialogflow-telephony-bridge/deployer \
-            .build/dialogflow-telephony-bridge/init \
             .build/dialogflow-telephony-bridge/tester \
-            .build/dialogflow-telephony-bridge/ubbagent \
             .build/dialogflow-telephony-bridge/dialogflow-telephony-bridge
 
 
@@ -96,23 +88,3 @@ app/build:: .build/dialogflow-telephony-bridge/deployer \
 	docker push "$(REGISTRY)/dialogflow-telephony-bridge:$(TAG)"
 	@touch "$@"
 
-# Build secondary app image.
-.build/dialogflow-telephony-bridge/init: init/* \
-                       .build/var/REGISTRY \
-                       .build/var/TAG \
-                       | .build/dialogflow-telephony-bridge
-	$(call print_target, $@)
-	cd init \
-	&& docker build --tag "$(REGISTRY)/dialogflow-telephony-bridge/init:$(TAG)" .
-	docker push "$(REGISTRY)/dialogflow-telephony-bridge/init:$(TAG)"
-	@touch "$@"
-
-# Relocate ubbagent image to $REGISTRY.
-.build/dialogflow-telephony-bridge/ubbagent: .build/ubbagent/ubbagent \
-                           .build/var/REGISTRY \
-                           .build/var/TAG \
-                           | .build/dialogflow-telephony-bridge
-	$(call print_target, $@)
-	docker tag "gcr.io/cloud-marketplace-tools/ubbagent" "$(REGISTRY)/dialogflow-telephony-bridge/ubbagent:$(TAG)"
-	docker push "$(REGISTRY)/dialogflow-telephony-bridge/ubbagent:$(TAG)"
-	@touch "$@"

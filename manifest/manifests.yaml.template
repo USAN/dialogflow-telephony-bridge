@@ -1,15 +1,4 @@
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: $name-sip-secret
-  labels:
-    app.kubernetes.io/name: "$name"
-    app.kubernetes.io/component: sip-secret
-type: Opaque
-data:
-  password: "$sipPassword"
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -456,15 +445,6 @@ spec:
     metadata:
       labels: *DfeDeploymentLabels
     spec:
-      initContainers:
-      - image: $imageInit
-        name: dfe-switch-init
-        env:
-        - name: AGENT_PORT
-          value: "6080"
-        volumeMounts:
-        - name: ubbagent-config
-          mountPath: /etc/ubbagent
       containers:
       - image: $imageTelephonyBridge
         name: dfe-switch
@@ -474,31 +454,3 @@ spec:
         env:
         - name: EXTERNAL_IP
           value: $name-dfe-switch-svc
-        - name: SIP_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: $name-sip-secret
-              key: password
-        - name: AGENT_PORT
-          value: "6080"
-      - image: $imageUbbagent
-        name: ubbagent
-        env:
-        - name: AGENT_CONFIG_FILE
-          value: /etc/ubbagent/config.yaml
-        - name: AGENT_LOCAL_PORT
-          value: "6080"
-        - name: AGENT_STATE_DIR
-          value: /var/lib/ubbagent
-        - name: AGENT_REPORT_DIR
-          value: /var/lib/ubbagent/reports
-        volumeMounts:
-        - name: ubbagent-config
-          mountPath: /etc/ubbagent
-        - name: ubbagent-state
-          mountPath: /var/lib/ubbagent
-      volumes:
-      - name: ubbagent-config
-        emptyDir: {}
-      - name: ubbagent-state
-        emptyDir: {}

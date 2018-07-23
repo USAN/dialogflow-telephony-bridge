@@ -20,9 +20,6 @@ export VAD_VOICE_MINIMUM_DURATION=${VAD_VOICE_MINIMUM_DURATION:-20}
 # pjsip configuration items
 # export EXTERNAL_IP=${EXTERNAL_IP:-} # has no default
 
-# metering agent configuration items
-export AGENT_PORT=${AGENT_PORT:-4242}
-
 # Check for external cluster IP
 if [ "${EXTERNAL_IP}" = "" ] ; then
         echo "ERROR: Load balancer name is not defined, please define external EXTERNAL_IP enviromental variable."

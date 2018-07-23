@@ -33,8 +33,6 @@ Set environment variables (modify if necessary):
 export APP_INSTANCE_NAME=dialogflow-entperise-telephony-gateway-1
 export NAMESPACE=default
 export IMAGE_GATEWAY=launcher.gcr.io/usan-public-209020/dialogflow-entperise-telephony-gateway:1
-export IMAGE_INIT=launcher.gcr.io/usan-public-209020/dialogflow-entperise-telephony-gateway/init:1
-export IMAGE_UBBAGENT=launcher.gcr.io/google/ubbagent
 ```
 
 Expand manifest template:

@@ -50,17 +50,17 @@ spec:
       
       ```
       kubectl patch svc "$name-dfe-switch-svc" \
-      --namespace "$namespace" \
-      -p '{"spec":{"loadBalancerSourceRanges":["1.2.3.4/32"]}}'
+        --namespace "$namespace" \
+        -p '{"spec":{"loadBalancerSourceRanges":["1.2.3.4/32"]}}'
       ```
       
       Then, run the following command to expose the SIP port on your gateway:
       
       ```
       kubectl patch svc "$name-dfe-switch-svc" \
-      --namespace "$namespace" \
-      -p '{"spec":{"ports":[{"port":5060,"targetPort":5060, \
-      "protocol":"UDP","name":"sip-port"}]}}'
+        --namespace "$namespace" \
+        -p '{"spec":{"ports":[{"port":5060,"targetPort":5060,
+          "protocol":"UDP","name":"sip-port"}]}}'
       ```
       
       # Access Gateway
@@ -69,11 +69,11 @@ spec:
       
       ```
       kubectl get --namespace ${namespace} \
-      svc ${name}-dfe-switch-svc \
-      -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+        svc ${name}-dfe-switch-svc \
+        -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
       ```
       
       Note that it might take some time for the external IP to be provisioned.
       
-      Place a SIP call to `some extension@service ip:5060` (any extension but test) to access Dialogflow through the Gateway.
-      Place a SIP call to `test@$service ip:5060` to test audio connectivity.
+      Place a SIP call to `some extension@service_ip:5060` (any extension but test) to access Dialogflow through the Gateway.
+      Place a SIP call to `test@service_ip:5060` to test audio connectivity.
