@@ -13,31 +13,7 @@ properties:
     default: $REGISTRY:$TAG
     x-google-marketplace:
       type: IMAGE
-  imageInit:
-    type: string
-    default: $REGISTRY/init:$TAG
-    x-google-marketplace:
-      type: IMAGE
-  imageUbbagent:
-    type: string
-    default: $REGISTRY/ubbagent:$TAG
-    x-google-marketplace:
-      type: IMAGE
-  sipPassword:
-    type: string
-    x-google-marketplace:
-      type: GENERATED_PASSWORD
-      generatedPassword:
-        length: 16
-  reportingSecret:
-    type: string
-    x-google-marketplace:
-      type: REPORTING_SECRET
 required:
 - name
 - namespace
 - imageTelephonyBridge
-- imageInit
-- imageUbbagent
-- sipPassword
-- reportingSecret
