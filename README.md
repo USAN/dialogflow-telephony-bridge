@@ -32,7 +32,7 @@ Set environment variables (modify if necessary):
 ```
 export APP_INSTANCE_NAME=dialogflow-entperise-telephony-gateway-1
 export NAMESPACE=default
-export IMAGE_GATEWAY=launcher.gcr.io/usan-public-209020/dialogflow-entperise-telephony-gateway:1
+export IMAGE_GATEWAY=launcher.gcr.io/usan-gcp/dialogflow-entperise-telephony-gateway:1
 ```
 
 Expand manifest template:
