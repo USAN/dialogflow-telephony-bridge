@@ -59,8 +59,8 @@ spec:
       ```
       kubectl patch svc "$name-dfe-switch-svc" \
         --namespace "$namespace" \
-        -p '{"spec":{"ports":[{"port":5060,"targetPort":5060,\
-        "protocol":"UDP","name":"sip-port"}]}}'
+        -p '{"spec":{"ports":[{"port":5060,"targetPort":5060,
+          "protocol":"UDP","name":"sip-port"}]}}'
       ```
       
       # Access Gateway
