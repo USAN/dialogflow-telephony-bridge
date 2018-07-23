@@ -25,7 +25,7 @@ NAME ?= dialogflow-telephony-bridge-1
 APP_PARAMETERS ?= { \
   "name": "$(NAME)", \
   "namespace": "$(NAMESPACE)", \
-  "imageTelephonyBridge": "$(REGISTRY)/dialogflow-telephony-bridge:$(TAG)", \
+  "imageTelephonyBridge": "$(REGISTRY)/dialogflow-telephony-bridge:$(TAG)" \
 }
 TESTER_IMAGE ?= $(REGISTRY)/dialogflow-telephony-bridge/tester:$(TAG)
 APP_TEST_PARAMETERS ?= { \
