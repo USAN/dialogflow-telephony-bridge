@@ -20,14 +20,16 @@ include marketplace-tools/var.Makefile
 # It requires several APP_* variables defined as followed.
 include marketplace-tools/app.Makefile
 
-APP_DEPLOYER_IMAGE ?= $(REGISTRY)/dialogflow-telephony-bridge/deployer:$(TAG)
+APP_REGISTRY_FOLDER ?= dialogflow-telephony-bridge-de
+
+APP_DEPLOYER_IMAGE ?= $(REGISTRY)/$(APP_REGISTRY_FOLDER)/deployer:$(TAG)
 NAME ?= dialogflow-telephony-bridge-1
 APP_PARAMETERS ?= { \
   "name": "$(NAME)", \
   "namespace": "$(NAMESPACE)", \
-  "imageTelephonyBridge": "$(REGISTRY)/dialogflow-telephony-bridge:$(TAG)" \
+  "imageTelephonyBridge": "$(REGISTRY)/$(APP_REGISTRY_FOLDER):$(TAG)" \
 }
-TESTER_IMAGE ?= $(REGISTRY)/dialogflow-telephony-bridge/tester:$(TAG)
+TESTER_IMAGE ?= $(REGISTRY)/$(APP_REGISTRY_FOLDER)/tester:$(TAG)
 APP_TEST_PARAMETERS ?= { \
   "imageTester": "$(TESTER_IMAGE)" \
 }
@@ -83,8 +85,8 @@ app/build:: .build/dialogflow-telephony-bridge/deployer \
                             | .build/dialogflow-telephony-bridge
 	$(call print_target, $@)
 	cd telephony-bridge && docker build \
-	    --tag "$(REGISTRY)/dialogflow-telephony-bridge:$(TAG)" \
+	    --tag "$(REGISTRY)/$(APP_REGISTRY_FOLDER):$(TAG)" \
 		.
-	docker push "$(REGISTRY)/dialogflow-telephony-bridge:$(TAG)"
+	docker push "$(REGISTRY)/$(APP_REGISTRY_FOLDER):$(TAG)"
 	@touch "$@"
 
