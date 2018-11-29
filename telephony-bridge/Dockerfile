@@ -177,7 +177,6 @@ RUN tar -C / -f /tmp/asterisk-binaries.tgz -x -v -z && \
 
 # copy container startup script & config
 WORKDIR /tmp
-COPY over-developer-limit.wav /var/lib/asterisk/sounds/en/
 COPY ./etc_asterisk ./etc_asterisk
 COPY ./entrypoint.sh ./
 
