@@ -30,9 +30,11 @@ Follow these instructions to install the USAN Dialogflow Enterprise Telephony Ga
 
 Set environment variables (modify if necessary):
 ```
-export APP_INSTANCE_NAME=dialogflow-entperise-telephony-gateway-1
+export APP_INSTANCE_NAME=dialogflow-enterprise-telephony-gateway-1
 export NAMESPACE=default
-export IMAGE_GATEWAY=launcher.gcr.io/usan-gcp/dialogflow-entperise-telephony-gateway:1
+export IMAGE_GATEWAY=launcher.gcr.io/usan-gcp/dialogflow-enterprise-telephony-gateway:1
+export IMAGE_INIT=launcher.gcr.io/usan-gcp/dialogflow-entperise-telephony-gateway/init:1
+export IMAGE_UBBAGENT=launcher.gcr.io/google/ubbagent
 ```
 
 Expand manifest template:
