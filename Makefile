@@ -56,7 +56,7 @@ app/build:: .build/dialogflow-telephony-bridge/deployer \
                            | .build/dialogflow-telephony-bridge
 	$(call print_target, $@)
 	docker build \
-	    --build-arg REGISTRY="$(REGISTRY)/dialogflow-telephony-bridge" \
+	    --build-arg REGISTRY="$(REGISTRY)/$(APP_REGISTRY_FOLDER)" \
 	    --build-arg TAG="$(TAG)" \
 	    --tag "$(APP_DEPLOYER_IMAGE)" \
 	    -f deployer/Dockerfile \
