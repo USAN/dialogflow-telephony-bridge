@@ -1,8 +1,8 @@
 TAG ?= latest
 
 # Convenience makefiles.
-include ../gcloud.Makefile
-include ../var.Makefile
+include gcloud.Makefile
+include var.Makefile
 
 APP_DEPLOYER_IMAGE ?= $(REGISTRY)/dialogflow-telephony-bridge/deployer:$(TAG)
 NAME ?= dialogflow-telephony-bridge-1
@@ -20,7 +20,7 @@ APP_TEST_PARAMETERS ?= { \
 # application.
 # It requires several APP_* variables defined above, and thus
 # must be included after.
-include ../app.Makefile
+include app.Makefile
 
 # Extend the target as defined in app.Makefile to
 # include real dependencies.
@@ -36,9 +36,8 @@ app/build:: .build/dialogflow-telephony-bridge/deployer \
                            deployer/* \
                            manifest/* \
                            schema.yaml \
-                           .build/marketplace/deployer/envsubst \
                            .build/var/APP_DEPLOYER_IMAGE \
-						   .build/var/MARKETPLACE_TOOLS_TAG \
+                           .build/var/MARKETPLACE_TOOLS_TAG \
                            .build/var/REGISTRY \
                            .build/var/TAG \
                            | .build/dialogflow-telephony-bridge
