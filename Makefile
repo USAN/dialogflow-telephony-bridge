@@ -1,24 +1,8 @@
 TAG ?= latest
 
-# crd.Makefile provides targets to install Application CRD.
-include marketplace-tools/crd.Makefile
-
-# gcloud.Makefile provides default values for
-# REGISTRY and NAMESPACE derived from local
-# gcloud and kubectl environments.
-include marketplace-tools/gcloud.Makefile
-
-# marketplace.Makefile provides targets such as
-# ".build/marketplace/deployer/envsubst" to build the base
-# deployer images locally.
-include marketplace-tools/marketplace.Makefile
-
-include marketplace-tools/var.Makefile
-
-# app.Makefile provides the main targets for installing the
-# application.
-# It requires several APP_* variables defined as followed.
-include marketplace-tools/app.Makefile
+# Convenience makefiles.
+include ../gcloud.Makefile
+include ../var.Makefile
 
 APP_DEPLOYER_IMAGE ?= $(REGISTRY)/dialogflow-telephony-bridge/deployer:$(TAG)
 NAME ?= dialogflow-telephony-bridge-1
@@ -32,12 +16,17 @@ APP_TEST_PARAMETERS ?= { \
   "imageTester": "$(TESTER_IMAGE)" \
 }
 
+# app.Makefile provides the main targets for installing the
+# application.
+# It requires several APP_* variables defined above, and thus
+# must be included after.
+include ../app.Makefile
+
 # Extend the target as defined in app.Makefile to
 # include real dependencies.
 app/build:: .build/dialogflow-telephony-bridge/deployer \
             .build/dialogflow-telephony-bridge/tester \
             .build/dialogflow-telephony-bridge/dialogflow-telephony-bridge
-
 
 .build/dialogflow-telephony-bridge: | .build
 	mkdir -p "$@"
@@ -49,6 +38,7 @@ app/build:: .build/dialogflow-telephony-bridge/deployer \
                            schema.yaml \
                            .build/marketplace/deployer/envsubst \
                            .build/var/APP_DEPLOYER_IMAGE \
+						   .build/var/MARKETPLACE_TOOLS_TAG \
                            .build/var/REGISTRY \
                            .build/var/TAG \
                            | .build/dialogflow-telephony-bridge
@@ -56,6 +46,7 @@ app/build:: .build/dialogflow-telephony-bridge/deployer \
 	docker build \
 	    --build-arg REGISTRY="$(REGISTRY)/dialogflow-telephony-bridge" \
 	    --build-arg TAG="$(TAG)" \
+		--build-arg MARKETPLACE_TOOLS_TAG="$(MARKETPLACE_TOOLS_TAG)" \
 	    --tag "$(APP_DEPLOYER_IMAGE)" \
 	    -f deployer/Dockerfile \
 	    .
