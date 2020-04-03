@@ -7,3 +7,6 @@
 [submodule "apptest/dialogflow-telephony-bridge-testsuite"]
 	path = apptest/dialogflow-telephony-bridge-testsuite
 	url = https://github.com/USAN/dialogflow-telephony-bridge-testsuite.git
+[submodule "vendor/marketplace-tools"]
+	path = vendor/marketplace-tools
+	url = https://github.com/GoogleCloudPlatform/marketplace-k8s-app-tools.git
