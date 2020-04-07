@@ -85,8 +85,9 @@ RUN make && make install
 
 # download asterisk
 WORKDIR /tmp
-ARG ASTERISK_VERSION=asterisk-13.21.1
-RUN wget http://downloads.asterisk.org/pub/telephony/asterisk/old-releases/${ASTERISK_VERSION}.tar.gz && tar -v -x -z -f ${ASTERISK_VERSION}.tar.gz
+ARG ASTERISK_VERSION=asterisk-13.32.0
+RUN wget http://downloads.asterisk.org/pub/telephony/asterisk/${ASTERISK_VERSION}.tar.gz && tar -v -x -z -f ${ASTERISK_VERSION}.tar.gz
+RUN wget https://raw.githubusercontent.com/asterisk/third-party/master/pjproject/2.9/pjproject-2.9.tar.bz2 
 
 # copy in new modules
 COPY res_speech_gdfe/ /tmp/res_speech_gdfe/
@@ -104,7 +105,7 @@ RUN printf "\nDFEGRPC_INCLUDE=@DFEGRPC_INCLUDE@\nDFEGRPC_LIB=@DFEGRPC_LIB@\n" >>
 #   disable native build
 #   try to keep lean, disable some stuff we don't need
 # then... make it & install it
-RUN ./bootstrap.sh && ./configure --with-pjproject-bundled && \
+RUN ./bootstrap.sh && ./configure --with-pjproject-bundled NOISY_BUILD=yes && \
     make menuselect.makeopts && \
     menuselect/menuselect \
       --disable BUILD_NATIVE \
@@ -133,7 +134,7 @@ RUN tar -f /tmp/asterisk-binaries.tgz -z -v -c \
 
 FROM ubuntu:14.04
 
-ARG ASTERISK_VERSION=asterisk-13.21.1
+ARG ASTERISK_VERSION=asterisk-13.32.0
 
 RUN apt-get update && \
     apt-get install -y \
