@@ -10,3 +10,6 @@
 [submodule "vendor/marketplace-tools"]
 	path = vendor/marketplace-tools
 	url = https://github.com/GoogleCloudPlatform/marketplace-k8s-app-tools.git
+[submodule "telephony-bridge/asterisk"]
+	path = telephony-bridge/asterisk
+	url = https://github.com/USAN/asterisk.git
