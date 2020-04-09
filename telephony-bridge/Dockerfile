@@ -85,16 +85,18 @@ RUN make && make install
 
 # download asterisk
 WORKDIR /tmp
-ARG ASTERISK_VERSION=asterisk-13.32.0
-RUN wget http://downloads.asterisk.org/pub/telephony/asterisk/${ASTERISK_VERSION}.tar.gz && tar -v -x -z -f ${ASTERISK_VERSION}.tar.gz
+#ARG ASTERISK_VERSION=asterisk-13.32.0
+ARG ASTERISK_VERSION=asterisk
+# RUN wget http://downloads.asterisk.org/pub/telephony/asterisk/${ASTERISK_VERSION}.tar.gz && tar -v -x -z -f ${ASTERISK_VERSION}.tar.gz
 RUN wget https://raw.githubusercontent.com/asterisk/third-party/master/pjproject/2.9/pjproject-2.9.tar.bz2 
 
 # copy in new modules
-COPY res_speech_gdfe/ /tmp/res_speech_gdfe/
-COPY res_speech_gdfe/res/ ${ASTERISK_VERSION}/res/
+COPY asterisk/ asterisk
+COPY res_speech_gdfe/ res_speech_gdfe/
+COPY res_speech_gdfe/res/ asterisk/res/
 
 # patch configure to pick up libdfegrpc
-WORKDIR /tmp/${ASTERISK_VERSION}
+WORKDIR /tmp/asterisk
 RUN printf "\nDFEGRPC_INCLUDE=@DFEGRPC_INCLUDE@\nDFEGRPC_LIB=@DFEGRPC_LIB@\n" >> makeopts.in \ 
     && printf "\nDFEGRPC=@PBX_DFEGRPC@\n" >> build_tools/menuselect-deps.in \
     && patch -p0 < /tmp/res_speech_gdfe/configure.ac.diff
@@ -134,8 +136,6 @@ RUN tar -f /tmp/asterisk-binaries.tgz -z -v -c \
 
 FROM ubuntu:14.04
 
-ARG ASTERISK_VERSION=asterisk-13.32.0
-
 RUN apt-get update && \
     apt-get install -y \
         curl \
@@ -171,10 +171,9 @@ COPY libdfegrpc/ /tmp/libdfegrpc/
 # copy in asterisk module code from submodule
 COPY res_speech_gdfe/ /tmp/res_speech_gdfe/
 
-COPY --from=asterisk_build /tmp/${ASTERISK_VERSION}.tar.gz /tmp
+COPY --from=asterisk_build /tmp/asterisk/ /tmp/asterisk
 COPY --from=asterisk_build /tmp/asterisk-binaries.tgz /tmp/asterisk-binaries.tgz
-RUN tar -C / -f /tmp/asterisk-binaries.tgz -x -v -z && \
-    tar -C /tmp -f /tmp/${ASTERISK_VERSION}.tar.gz -x -v -z
+RUN tar -C / -f /tmp/asterisk-binaries.tgz -x -v -z
 
 # copy container startup script & config
 WORKDIR /tmp
