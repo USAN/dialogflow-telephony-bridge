@@ -107,7 +107,7 @@ RUN printf "\nDFEGRPC_INCLUDE=@DFEGRPC_INCLUDE@\nDFEGRPC_LIB=@DFEGRPC_LIB@\n" >>
 #   disable native build
 #   try to keep lean, disable some stuff we don't need
 # then... make it & install it
-RUN ./bootstrap.sh && ./configure --with-pjproject-bundled NOISY_BUILD=yes && \
+RUN ./bootstrap.sh && ./configure --with-pjproject-bundled --enable-dev-mode NOISY_BUILD=yes && \
     make menuselect.makeopts && \
     menuselect/menuselect \
       --disable BUILD_NATIVE \
