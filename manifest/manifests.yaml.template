@@ -30,7 +30,7 @@ metadata:
     app.kubernetes.io/name: "$name"
     app.kubernetes.io/component: dfe-switch
 spec:
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: Local
   ports:
   - name: 10000-to-10000-udp
     port: 10000
